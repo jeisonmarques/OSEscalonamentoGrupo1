@@ -15,6 +15,7 @@ public class Home extends javax.swing.JFrame {
      */
     public Home() {
         initComponents();
+        
     }
 
     /**
@@ -26,31 +27,54 @@ public class Home extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
+        jDesktop = new javax.swing.JDesktopPane();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenuTeste = new javax.swing.JMenu();
+        jMenuItemTeste = new javax.swing.JMenuItem();
+        jMenu2 = new javax.swing.JMenu();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel1.setText("Teste");
+        jDesktop.setPreferredSize(new java.awt.Dimension(800, 800));
+        jDesktop.setSize(new java.awt.Dimension(600, 600));
+
+        jMenuTeste.setText("File");
+
+        jMenuItemTeste.setText("Teste");
+        jMenuItemTeste.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemTesteActionPerformed(evt);
+            }
+        });
+        jMenuTeste.add(jMenuItemTeste);
+
+        jMenuBar1.add(jMenuTeste);
+
+        jMenu2.setText("Edit");
+        jMenuBar1.add(jMenu2);
+
+        setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(144, 144, 144)
-                .addComponent(jLabel1)
-                .addContainerGap(222, Short.MAX_VALUE))
+            .addComponent(jDesktop, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(111, 111, 111)
-                .addComponent(jLabel1)
-                .addContainerGap(173, Short.MAX_VALUE))
+            .addComponent(jDesktop, javax.swing.GroupLayout.DEFAULT_SIZE, 278, Short.MAX_VALUE)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jMenuItemTesteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemTesteActionPerformed
+        Teste t = new Teste();
+        t.setVisible(true);
+        jDesktop.add(t);
+
+    }//GEN-LAST:event_jMenuItemTesteActionPerformed
 
     /**
      * @param args the command line arguments
@@ -78,7 +102,8 @@ public class Home extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(Home.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-
+        
+        
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -88,6 +113,10 @@ public class Home extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JDesktopPane jDesktop;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItemTeste;
+    private javax.swing.JMenu jMenuTeste;
     // End of variables declaration//GEN-END:variables
 }
