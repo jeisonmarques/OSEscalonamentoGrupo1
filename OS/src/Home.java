@@ -13,9 +13,11 @@ public class Home extends javax.swing.JFrame {
     /**
      * Creates new form Home
      */
+    public AddProcessos view;
     public Home() {
         initComponents();
-        
+       
+        view = new AddProcessos();
     }
 
     /**
@@ -30,28 +32,33 @@ public class Home extends javax.swing.JFrame {
         jDesktop = new javax.swing.JDesktopPane();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenuTeste = new javax.swing.JMenu();
-        jMenuItemTeste = new javax.swing.JMenuItem();
-        jMenu2 = new javax.swing.JMenu();
+        jMenuItemGrid = new javax.swing.JMenuItem();
+        jMenuItem1 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jDesktop.setPreferredSize(new java.awt.Dimension(800, 800));
-        jDesktop.setSize(new java.awt.Dimension(600, 600));
+        jDesktop.setPreferredSize(new java.awt.Dimension(1000, 1000));
+        jDesktop.setSize(new java.awt.Dimension(1000, 1000));
 
         jMenuTeste.setText("File");
 
-        jMenuItemTeste.setText("Teste");
-        jMenuItemTeste.addActionListener(new java.awt.event.ActionListener() {
+        jMenuItemGrid.setText("Grid");
+        jMenuItemGrid.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItemTesteActionPerformed(evt);
+                jMenuItemGridActionPerformed(evt);
             }
         });
-        jMenuTeste.add(jMenuItemTeste);
+        jMenuTeste.add(jMenuItemGrid);
+
+        jMenuItem1.setText("Add Process");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenuTeste.add(jMenuItem1);
 
         jMenuBar1.add(jMenuTeste);
-
-        jMenu2.setText("Edit");
-        jMenuBar1.add(jMenu2);
 
         setJMenuBar(jMenuBar1);
 
@@ -69,12 +76,17 @@ public class Home extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jMenuItemTesteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemTesteActionPerformed
-        Teste t = new Teste();
-        t.setVisible(true);
-        jDesktop.add(t);
+    private void jMenuItemGridActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemGridActionPerformed
 
-    }//GEN-LAST:event_jMenuItemTesteActionPerformed
+        view.setVisible(true);
+        jDesktop.add(view);
+    }//GEN-LAST:event_jMenuItemGridActionPerformed
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        GridProcessos g = new GridProcessos();
+        g.setVisible(true);
+        jDesktop.add(g);
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -114,9 +126,9 @@ public class Home extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JDesktopPane jDesktop;
-    private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItemTeste;
+    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItemGrid;
     private javax.swing.JMenu jMenuTeste;
     // End of variables declaration//GEN-END:variables
 }
