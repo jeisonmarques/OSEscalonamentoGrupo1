@@ -16,8 +16,9 @@ public class Home extends javax.swing.JFrame {
     public AddProcessos view;
     public Home() {
         initComponents();
-       
+        setLocationRelativeTo(null);
         view = new AddProcessos();
+        
     }
 
     /**
