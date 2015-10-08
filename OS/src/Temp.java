@@ -1,5 +1,6 @@
 
 import java.util.ArrayList;
+import model.Processo;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -13,6 +14,6 @@ import java.util.ArrayList;
  */
 public class Temp {
     
-    public static ArrayList<String> list = new ArrayList<>();
+    public static ArrayList<Processo> list = new ArrayList<>();
 
 }
