@@ -1,10 +1,16 @@
+package ui;
 
+
+import ui.EditPrioridadeProcesso;
+import util.Temp;
+import ui.AddProcessos;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.JDesktopPane;
 import javax.swing.table.DefaultTableModel;
 import model.Processo;
+import util.Log;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -27,20 +33,33 @@ public class GerenciaDeProcessos extends javax.swing.JInternalFrame {
          Timer timer = new Timer();
     
      timer.scheduleAtFixedRate(new TimerTask() {
-     int t=0;
      public void run() {
-            if(t>100)
-              t = 0;
+
+            int index = jTableProcesso.getSelectedRow();
+            if(index != -1)
+            {
+                Popula();
+                jTableProcesso.setRowSelectionInterval(index, index);
+            }
             else
-              t++;
-            
-            Popula();
+            {
+                Popula();
+            }
+                 
+            //jTableProcesso.clearSelection();
             //jProgressBar.setValue(t);
             Date d = new Date();
             System.out.println("Tela grid atualizada as " + d.toString());
             //jLabelVelocidade.setText(""+ jSlider.getValue());
-       }
-    }, 0, 1000);
+
+            }
+        }, 0, 1000);
+    }
+    
+    private int RetornaPidTabela()
+    {
+        String pid= (String)jTableProcesso.getModel().getValueAt(jTableProcesso.getSelectedRow(), 0);
+        return Integer.parseInt(pid);
     }
 
     public void deletaTodasLinhas(final DefaultTableModel model) {
@@ -53,7 +72,7 @@ public class GerenciaDeProcessos extends javax.swing.JInternalFrame {
         DefaultTableModel modelo = (DefaultTableModel) jTableProcesso.getModel();
         deletaTodasLinhas(modelo);
         for (Processo val : Temp.list) {
-            modelo.addRow(new String [] {""+val.getPid(),val.getEstado(), ""+val.getTempoProcessamento()});
+            modelo.addRow(new String [] {""+val.getPid(),val.getEstado(), val.getTipo(), ""+val.getTempoProcessamento(), ""+val.getPrioridade()});
         }
     }
     
@@ -75,12 +94,32 @@ public class GerenciaDeProcessos extends javax.swing.JInternalFrame {
         jTableProcesso = new javax.swing.JTable();
 
         jButtonSuspender.setText("Suspender");
+        jButtonSuspender.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonSuspenderActionPerformed(evt);
+            }
+        });
 
         jButtonProsseguir.setText("Prosseguir");
+        jButtonProsseguir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonProsseguirActionPerformed(evt);
+            }
+        });
 
         jButtonFinalizar.setText("Finalizar");
+        jButtonFinalizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonFinalizarActionPerformed(evt);
+            }
+        });
 
         jButtonPrioridade.setText("Prioridade");
+        jButtonPrioridade.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonPrioridadeActionPerformed(evt);
+            }
+        });
 
         jButtonCriar.setText("Criar");
         jButtonCriar.addActionListener(new java.awt.event.ActionListener() {
@@ -94,11 +133,11 @@ public class GerenciaDeProcessos extends javax.swing.JInternalFrame {
 
             },
             new String [] {
-                "PID", "Estado", "Tempo"
+                "PID", "Estado", "Tipo", "Tempo", "Prioridade"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -112,8 +151,8 @@ public class GerenciaDeProcessos extends javax.swing.JInternalFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 451, Short.MAX_VALUE)
+                .addGap(2, 2, 2)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 529, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButtonProsseguir)
@@ -128,20 +167,21 @@ public class GerenciaDeProcessos extends javax.swing.JInternalFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 295, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jButtonCriar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonSuspender)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonProsseguir)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonFinalizar)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonPrioridade)))
+                .addContainerGap()
+                .addComponent(jButtonCriar)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButtonSuspender)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButtonProsseguir)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButtonFinalizar)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButtonPrioridade)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 295, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         pack();
@@ -153,6 +193,37 @@ public class GerenciaDeProcessos extends javax.swing.JInternalFrame {
         desk.add(add);
         add.setVisible(true); 
     }//GEN-LAST:event_jButtonCriarActionPerformed
+
+    private void jButtonSuspenderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSuspenderActionPerformed
+        if(jTableProcesso.getSelectedRow() == -1){
+            Temp.AtualizaEstado(RetornaPidTabela(), "Suspender");
+        }
+    }//GEN-LAST:event_jButtonSuspenderActionPerformed
+
+    private void jButtonPrioridadeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPrioridadeActionPerformed
+        int indexRow = jTableProcesso.getSelectedRow();
+        if(indexRow != -1)
+        {        
+            JDesktopPane desk = this.getDesktopPane();
+            String prioridade = (String) jTableProcesso.getModel().getValueAt(indexRow, 4);
+            EditPrioridadeProcesso editPrio = new EditPrioridadeProcesso(RetornaPidTabela(), Integer.parseInt(prioridade));
+            desk.add(editPrio);
+            editPrio.setVisible(true);   
+        }
+    }//GEN-LAST:event_jButtonPrioridadeActionPerformed
+
+    private void jButtonProsseguirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonProsseguirActionPerformed
+        if(jTableProcesso.getSelectedRow() == -1){
+            Temp.AtualizaEstado(RetornaPidTabela(), "Prosseguir");
+        }
+    }//GEN-LAST:event_jButtonProsseguirActionPerformed
+
+    private void jButtonFinalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFinalizarActionPerformed
+        if(jTableProcesso.getSelectedRow() == -1){
+            Temp.AtualizaEstado(RetornaPidTabela(), "Finalizar");
+            Log.AdicionarMenssagem("add");
+        }
+    }//GEN-LAST:event_jButtonFinalizarActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

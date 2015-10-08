@@ -6,6 +6,7 @@
 package model;
 
 import java.util.Date;
+import java.util.Random;
 
 /**
  *
@@ -23,9 +24,12 @@ public class Processo {
     private boolean novo;
 
     public Processo() {
+        
+        Random gerador = new Random(); 
         this.novo = true;
         this.tempoProcessamento = 0;
         this.estado = "N/A";
+        this.pid = gerador.nextInt(999999);
     }
 
     public String getTipo() {

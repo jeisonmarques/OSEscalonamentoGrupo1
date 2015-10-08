@@ -1,10 +1,8 @@
+package ui;
 
 
-import java.util.Date;
-import java.util.Timer;
-import java.util.TimerTask;
-import javax.swing.table.DefaultTableModel;
 import model.Processo;
+import util.Temp;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -26,8 +24,7 @@ public class AddProcessos extends javax.swing.JInternalFrame {
     public AddProcessos() {
     initComponents();
     
-    proc = new Processo();
-    proc.setPid(1111);        
+    proc = new Processo();   
 
     }
 

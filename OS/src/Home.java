@@ -1,3 +1,8 @@
+
+import ui.GerenciaDeProcessos;
+import ui.AddProcessos;
+import util.Log;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -18,8 +23,8 @@ public class Home extends javax.swing.JFrame {
         initComponents();
         setLocationRelativeTo(null);
         setSize(800, 600);
-        view = new AddProcessos();
-        
+        view = new AddProcessos();       
+       
     }
 
     /**
@@ -34,32 +39,14 @@ public class Home extends javax.swing.JFrame {
         jDesktop = new javax.swing.JDesktopPane();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenuTeste = new javax.swing.JMenu();
-        jMenuItemGrid = new javax.swing.JMenuItem();
-        jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItemGerenciaDeProcesso = new javax.swing.JMenuItem();
+        jMenuItemLog = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jDesktop.setPreferredSize(new java.awt.Dimension(1000, 1000));
-        jDesktop.setSize(new java.awt.Dimension(1000, 1000));
 
         jMenuTeste.setText("File");
-
-        jMenuItemGrid.setText("Grid");
-        jMenuItemGrid.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItemGridActionPerformed(evt);
-            }
-        });
-        jMenuTeste.add(jMenuItemGrid);
-
-        jMenuItem1.setText("Add Process");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
-            }
-        });
-        jMenuTeste.add(jMenuItem1);
 
         jMenuItemGerenciaDeProcesso.setText("Gerencia de Processos");
         jMenuItemGerenciaDeProcesso.addActionListener(new java.awt.event.ActionListener() {
@@ -68,6 +55,14 @@ public class Home extends javax.swing.JFrame {
             }
         });
         jMenuTeste.add(jMenuItemGerenciaDeProcesso);
+
+        jMenuItemLog.setText("Log de Processos");
+        jMenuItemLog.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemLogActionPerformed(evt);
+            }
+        });
+        jMenuTeste.add(jMenuItemLog);
 
         jMenuBar1.add(jMenuTeste);
 
@@ -87,23 +82,17 @@ public class Home extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jMenuItemGridActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemGridActionPerformed
-
-        view.setVisible(true);
-        jDesktop.add(view);
-    }//GEN-LAST:event_jMenuItemGridActionPerformed
-
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        GridProcessos g = new GridProcessos();
-        g.setVisible(true);
-        jDesktop.add(g);
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
-
     private void jMenuItemGerenciaDeProcessoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemGerenciaDeProcessoActionPerformed
         GerenciaDeProcessos ger = new GerenciaDeProcessos();
         ger.setVisible(true);
         jDesktop.add(ger);
     }//GEN-LAST:event_jMenuItemGerenciaDeProcessoActionPerformed
+
+    private void jMenuItemLogActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemLogActionPerformed
+        LogDeProcessos log = new LogDeProcessos();
+        log.setVisible(true);
+        jDesktop.add(log);
+    }//GEN-LAST:event_jMenuItemLogActionPerformed
 
     /**
      * @param args the command line arguments
@@ -144,9 +133,8 @@ public class Home extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JDesktopPane jDesktop;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItemGerenciaDeProcesso;
-    private javax.swing.JMenuItem jMenuItemGrid;
+    private javax.swing.JMenuItem jMenuItemLog;
     private javax.swing.JMenu jMenuTeste;
     // End of variables declaration//GEN-END:variables
 }
