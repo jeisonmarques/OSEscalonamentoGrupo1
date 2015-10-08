@@ -3,6 +3,7 @@ import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.JScrollPane;
+import javax.swing.text.DefaultCaret;
 import util.Log;
 import util.LogMensagem;
 
@@ -25,6 +26,8 @@ public class LogDeProcessos extends javax.swing.JInternalFrame {
     public LogDeProcessos() {
         initComponents();        
         jTextAreaLog.setEditable(false);
+        DefaultCaret caret = (DefaultCaret)jTextAreaLog.getCaret();
+        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
         
         Timer timer = new Timer();
     
