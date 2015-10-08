@@ -1,8 +1,8 @@
+package ui;
 
-import java.util.Date;
+
 import java.util.Timer;
 import java.util.TimerTask;
-import javax.swing.JScrollPane;
 import javax.swing.text.DefaultCaret;
 import util.Log;
 import util.LogMensagem;

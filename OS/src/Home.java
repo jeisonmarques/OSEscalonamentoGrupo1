@@ -1,4 +1,5 @@
 
+import ui.LogDeProcessos;
 import ui.GerenciaDeProcessos;
 import ui.AddProcessos;
 import util.Log;
@@ -23,7 +24,7 @@ public class Home extends javax.swing.JFrame {
         initComponents();
         setLocationRelativeTo(null);
         setSize(800, 600);
-        view = new AddProcessos();       
+
        
     }
 
@@ -41,6 +42,7 @@ public class Home extends javax.swing.JFrame {
         jMenuTeste = new javax.swing.JMenu();
         jMenuItemGerenciaDeProcesso = new javax.swing.JMenuItem();
         jMenuItemLog = new javax.swing.JMenuItem();
+        jMenuItemProcessamento = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -63,6 +65,14 @@ public class Home extends javax.swing.JFrame {
             }
         });
         jMenuTeste.add(jMenuItemLog);
+
+        jMenuItemProcessamento.setText("Processamento");
+        jMenuItemProcessamento.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemProcessamentoActionPerformed(evt);
+            }
+        });
+        jMenuTeste.add(jMenuItemProcessamento);
 
         jMenuBar1.add(jMenuTeste);
 
@@ -93,6 +103,12 @@ public class Home extends javax.swing.JFrame {
         log.setVisible(true);
         jDesktop.add(log);
     }//GEN-LAST:event_jMenuItemLogActionPerformed
+
+    private void jMenuItemProcessamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemProcessamentoActionPerformed
+        ProcessamentoUI proc = new ProcessamentoUI();
+        proc.setVisible(true);
+        
+    }//GEN-LAST:event_jMenuItemProcessamentoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -135,6 +151,7 @@ public class Home extends javax.swing.JFrame {
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItemGerenciaDeProcesso;
     private javax.swing.JMenuItem jMenuItemLog;
+    private javax.swing.JMenuItem jMenuItemProcessamento;
     private javax.swing.JMenu jMenuTeste;
     // End of variables declaration//GEN-END:variables
 }
