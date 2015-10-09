@@ -45,12 +45,6 @@ public class GerenciaDeProcessos extends javax.swing.JInternalFrame {
             {
                 Popula();
             }
-                 
-            //jTableProcesso.clearSelection();
-            //jProgressBar.setValue(t);
-            Date d = new Date();
-            System.out.println("Tela grid atualizada as " + d.toString());
-            //jLabelVelocidade.setText(""+ jSlider.getValue());
 
             }
         }, 0, 1000);
@@ -213,13 +207,13 @@ public class GerenciaDeProcessos extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_jButtonPrioridadeActionPerformed
 
     private void jButtonProsseguirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonProsseguirActionPerformed
-        if(jTableProcesso.getSelectedRow() == -1){
+        if(jTableProcesso.getSelectedRow() != -1){
             Temp.AtualizaEstado(RetornaPidTabela(), "Prosseguir");
         }
     }//GEN-LAST:event_jButtonProsseguirActionPerformed
 
     private void jButtonFinalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFinalizarActionPerformed
-        if(jTableProcesso.getSelectedRow() == -1){
+        if(jTableProcesso.getSelectedRow() != -1){
             Temp.AtualizaEstado(RetornaPidTabela(), "Finalizar");
             Log.AdicionarMenssagem("add");
         }

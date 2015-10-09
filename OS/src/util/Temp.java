@@ -18,6 +18,18 @@ public class Temp {
     
     public static ArrayList<Processo> list = new ArrayList<>();
     
+    public static void AtualizaNovo(int pid, boolean novo)
+    {
+        int index = 0;
+       
+        Processo returnProc = ReturnaProcessoPorPid(pid); 
+
+        index = list.indexOf(returnProc);
+        returnProc.setNovo(novo);
+        
+        list.set(index, returnProc);
+    }
+    
     public static void AtualizaEstado(int pid, String novoEstado)
     {
         int index = 0;

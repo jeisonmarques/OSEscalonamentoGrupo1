@@ -107,7 +107,7 @@ public class Home extends javax.swing.JFrame {
     private void jMenuItemProcessamentoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemProcessamentoActionPerformed
         ProcessamentoUI proc = new ProcessamentoUI();
         proc.setVisible(true);
-        
+        jDesktop.add(proc);
     }//GEN-LAST:event_jMenuItemProcessamentoActionPerformed
 
     /**

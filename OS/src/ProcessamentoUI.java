@@ -1,3 +1,11 @@
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
+import model.Processo;
+import util.Temp;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -13,10 +21,42 @@ public class ProcessamentoUI extends javax.swing.JInternalFrame {
     /**
      * Creates new form ProcessamentoUI
      */
+    private Timer timer;
+    private ArrayList<Processo> listRun = new ArrayList();
+    
     public ProcessamentoUI() {
         initComponents();
+        timer = new Timer();
+    
+     timer.scheduleAtFixedRate(new TimerTask() {
+     public void run() {
+
+            VerificaProcessoNovo();
+            
+            Date d = new Date();
+            System.out.println("Processando as " + d.toString());
+            System.out.println("Lista de Processamento: "+listRun.size());
+            System.out.println("Lista de Processos: "+Temp.list.size());
+            }
+        }, 0, 1000);
     }
 
+    public void VerificaProcessoNovo()
+    {
+        if(Temp.list.size() > 0)
+        {
+            for (Processo proc : Temp.list) {
+                if(proc.isNovo())
+                {
+                    listRun.add(proc);
+                    Temp.AtualizaEstado(proc.getPid(), "Espera");
+                    Temp.AtualizaNovo(proc.getPid(), false);
+                }
+            }
+        }
+    }
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
