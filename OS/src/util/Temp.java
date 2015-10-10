@@ -18,14 +18,14 @@ public class Temp {
     
     public static ArrayList<Processo> list = new ArrayList<>();
     
-    public static void AtualizaNovo(int pid, boolean novo)
+    public static void AtualizaProcessado(int pid, boolean novo)
     {
         int index = 0;
        
         Processo returnProc = ReturnaProcessoPorPid(pid); 
 
         index = list.indexOf(returnProc);
-        returnProc.setNovo(novo);
+        returnProc.setProcessado(novo);
         
         list.set(index, returnProc);
     }
@@ -37,9 +37,11 @@ public class Temp {
         Processo returnProc = ReturnaProcessoPorPid(pid); 
 
         index = list.indexOf(returnProc);
-        returnProc.setEstado(novoEstado);
-        
+
+        returnProc.setEstado(novoEstado);     
         list.set(index, returnProc);
+        
+
     }  
     
     public static void AtualizaPrioridade(int pid, int prioridade)
@@ -53,7 +55,17 @@ public class Temp {
         list.set(index, returnProc);
     }
     
-    private static Processo ReturnaProcessoPorPid(int pid)
+    public static void FinalizaProcesso(int pid)
+    {
+        int index = 0;
+        Processo returnProc = ReturnaProcessoPorPid(pid);  
+        
+        index = list.indexOf(returnProc);
+        
+        list.remove(index);
+    }
+    
+    public static Processo ReturnaProcessoPorPid(int pid)
     {
         Processo returnProc = null;
         for (Processo proc : list) {

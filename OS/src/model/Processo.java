@@ -21,12 +21,12 @@ public class Processo {
     private Date horaSaida;
     private int tempoProcessamento;
     private String estado;
-    private boolean novo;
+    private boolean processado;
 
     public Processo() {
         
         Random gerador = new Random(); 
-        this.novo = true;
+        this.processado = false;
         this.tempoProcessamento = 0;
         this.estado = "N/A";
         this.pid = gerador.nextInt(999999);
@@ -88,17 +88,17 @@ public class Processo {
         this.estado = estado;
     }
 
-    public boolean isNovo() {
-        return novo;
+    public boolean getProcessado() {
+        return processado;
     }
 
-    public void setNovo(boolean novo) {
-        this.novo = novo;
+    public void setProcessado(boolean processado) {
+        this.processado = processado;
     }
 
     @Override
     public String toString() {
-        return "Processo{" + "tipo=" + tipo + ", pid=" + pid + ", prioridade=" + prioridade + ", horaEntrada=" + horaEntrada + ", horaSaida=" + horaSaida + ", tempoProcessamento=" + tempoProcessamento + ", estado=" + estado + ", novo=" + novo + '}';
+        return "Processo{" + "tipo=" + tipo + ", pid=" + pid + ", prioridade=" + prioridade + ", horaEntrada=" + horaEntrada + ", horaSaida=" + horaSaida + ", tempoProcessamento=" + tempoProcessamento + ", estado=" + estado + ", processado=" + processado + '}';
     }
     
 }

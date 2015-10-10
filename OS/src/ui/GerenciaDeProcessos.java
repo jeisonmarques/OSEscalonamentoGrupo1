@@ -47,7 +47,7 @@ public class GerenciaDeProcessos extends javax.swing.JInternalFrame {
             }
 
             }
-        }, 0, 1000);
+        }, 0, 300);
     }
     
     private int RetornaPidTabela()
@@ -146,16 +146,15 @@ public class GerenciaDeProcessos extends javax.swing.JInternalFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(2, 2, 2)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 529, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 535, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButtonProsseguir)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addComponent(jButtonFinalizar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButtonPrioridade, javax.swing.GroupLayout.Alignment.LEADING))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(jButtonCriar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButtonSuspender, javax.swing.GroupLayout.Alignment.LEADING)))
+                    .addComponent(jButtonSuspender)
+                    .addComponent(jButtonCriar, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -216,6 +215,7 @@ public class GerenciaDeProcessos extends javax.swing.JInternalFrame {
         if(jTableProcesso.getSelectedRow() != -1){
             Temp.AtualizaEstado(RetornaPidTabela(), "Finalizar");
             Log.AdicionarMenssagem("add");
+            jTableProcesso.clearSelection();
         }
     }//GEN-LAST:event_jButtonFinalizarActionPerformed
 

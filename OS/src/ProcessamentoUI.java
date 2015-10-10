@@ -3,6 +3,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import model.Processo;
 import util.Temp;
 
@@ -31,7 +33,13 @@ public class ProcessamentoUI extends javax.swing.JInternalFrame {
      timer.scheduleAtFixedRate(new TimerTask() {
      public void run() {
 
-            VerificaProcessoNovo();
+            try {
+                
+                VerificaProcessoNovo();
+                ProcessoFifo();
+            } catch (InterruptedException ex) {
+                Logger.getLogger(ProcessamentoUI.class.getName()).log(Level.SEVERE, null, ex);
+            }
             
             Date d = new Date();
             System.out.println("Processando as " + d.toString());
@@ -40,17 +48,78 @@ public class ProcessamentoUI extends javax.swing.JInternalFrame {
             }
         }, 0, 1000);
     }
+    
+    public void ProcessoFifo() throws InterruptedException
+    {
+        if(listRun.size() > 0)
+        {
+            
+            Processo proc = listRun.get(0);
+            Processo procTemp = Temp.ReturnaProcessoPorPid(proc.getPid());
+            boolean Finalizar = TrocaEstado(procTemp, "Execucao");      
+            listRun.remove(0);
+                      
+
+            System.out.println(proc.toString());
+            if("CPU-Bound".equals(proc.getTipo()))
+            {
+                Thread.sleep(700);
+                proc.setProcessado(true);
+            }
+            if("I/O-Bound(Disco)".equals(proc.getTipo()))
+            {
+                Thread.sleep(500);
+                proc.setProcessado(false);
+            }
+            if("I/O-Bound(Fita)".equals(proc.getTipo()))
+            {
+                Thread.sleep(500);
+                proc.setProcessado(false);
+            }
+            
+            Finalizar = TrocaEstado(proc, "Ponto");
+            System.out.println(proc.toString());
+            
+            if(!Finalizar)
+            {
+                listRun.add(proc);
+            }
+            else
+            {
+                Temp.FinalizaProcesso(proc.getPid());
+            }
+            
+        } 
+    }
+    public boolean TrocaEstado(Processo proc, String estato)
+    {
+
+        if("Finalizar".equals(proc.getEstado()))
+        {
+            Temp.AtualizaEstado(proc.getPid(), estato);
+            return true;
+        }
+        else
+        {
+            Temp.AtualizaEstado(proc.getPid(), estato);
+           return false; 
+        } 
+        
+    }
+    
 
     public void VerificaProcessoNovo()
     {
-        if(Temp.list.size() > 0)
+        if(Temp.list.size() != listRun.size() && Temp.list.size() > 0)
         {
-            for (Processo proc : Temp.list) {
-                if(proc.isNovo())
-                {
-                    listRun.add(proc);
-                    Temp.AtualizaEstado(proc.getPid(), "Espera");
-                    Temp.AtualizaNovo(proc.getPid(), false);
+            if(Temp.list.size() > listRun.size())
+            {
+                for (Processo proc : Temp.list) {
+                    if("N/A".equals(proc.getEstado()))
+                    {
+                        listRun.add(proc);
+                        Temp.AtualizaEstado(proc.getPid(), "Ponto");
+                    }
                 }
             }
         }
