@@ -32,13 +32,15 @@ public class Temp {
     
     public static void AtualizaEstado(int pid, String novoEstado)
     {
-        int index = 0;
-       
+        int index; 
         Processo returnProc = ReturnaProcessoPorPid(pid); 
-
         index = list.indexOf(returnProc);
-
-        returnProc.setEstado(novoEstado);     
+        returnProc.setEstado(novoEstado);  
+        
+        if(novoEstado.equals("Finalizar"))
+        {
+            returnProc.finaliza = true;
+        }
         list.set(index, returnProc);
         
 
@@ -57,7 +59,7 @@ public class Temp {
     
     public static void FinalizaProcesso(int pid)
     {
-        int index = 0;
+        int index;
         Processo returnProc = ReturnaProcessoPorPid(pid);  
         
         index = list.indexOf(returnProc);

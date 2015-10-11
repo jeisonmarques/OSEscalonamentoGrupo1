@@ -1,10 +1,7 @@
 package ui;
 
 
-import ui.EditPrioridadeProcesso;
 import util.Temp;
-import ui.AddProcessos;
-import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.JDesktopPane;
@@ -185,6 +182,7 @@ public class GerenciaDeProcessos extends javax.swing.JInternalFrame {
         AddProcessos add = new AddProcessos();
         desk.add(add);
         add.setVisible(true); 
+       
     }//GEN-LAST:event_jButtonCriarActionPerformed
 
     private void jButtonSuspenderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSuspenderActionPerformed
@@ -215,7 +213,7 @@ public class GerenciaDeProcessos extends javax.swing.JInternalFrame {
         if(jTableProcesso.getSelectedRow() != -1){
             Temp.AtualizaEstado(RetornaPidTabela(), "Finalizar");
             Log.AdicionarMenssagem("add");
-            jTableProcesso.clearSelection();
+            jTableProcesso.clearSelection();            
         }
     }//GEN-LAST:event_jButtonFinalizarActionPerformed
 

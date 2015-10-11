@@ -1,4 +1,5 @@
 
+import ui.ProcessamentoUI;
 import ui.LogDeProcessos;
 import ui.GerenciaDeProcessos;
 import ui.AddProcessos;

@@ -22,6 +22,7 @@ public class Processo {
     private int tempoProcessamento;
     private String estado;
     private boolean processado;
+    public boolean finaliza;
 
     public Processo() {
         
@@ -30,6 +31,7 @@ public class Processo {
         this.tempoProcessamento = 0;
         this.estado = "N/A";
         this.pid = gerador.nextInt(999999);
+        this.finaliza = false;
     }
 
     public String getTipo() {
@@ -98,7 +100,11 @@ public class Processo {
 
     @Override
     public String toString() {
-        return "Processo{" + "tipo=" + tipo + ", pid=" + pid + ", prioridade=" + prioridade + ", horaEntrada=" + horaEntrada + ", horaSaida=" + horaSaida + ", tempoProcessamento=" + tempoProcessamento + ", estado=" + estado + ", processado=" + processado + '}';
+        return "Processo{" + "tipo=" + tipo + ", pid=" + pid 
+                + ", prioridade=" + prioridade + ", hrEntrada=" + horaEntrada 
+                + ", hrSaida=" + horaSaida + ", tProc=" + tempoProcessamento 
+                + ", estado=" + estado + ", proc=" + processado 
+                + ", finalizar="+finaliza+'}';
     }
     
 }

@@ -1,3 +1,5 @@
+package ui;
+
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -7,6 +9,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.Processo;
 import util.Temp;
+
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -24,7 +27,7 @@ public class ProcessamentoUI extends javax.swing.JInternalFrame {
      * Creates new form ProcessamentoUI
      */
     private Timer timer;
-    private ArrayList<Processo> listRun = new ArrayList();
+    public ArrayList<Processo> listRun = new ArrayList();
     
     public ProcessamentoUI() {
         initComponents();
@@ -32,10 +35,9 @@ public class ProcessamentoUI extends javax.swing.JInternalFrame {
     
      timer.scheduleAtFixedRate(new TimerTask() {
      public void run() {
-
-            try {
-                
+            try {             
                 VerificaProcessoNovo();
+                AtualizaListas();
                 ProcessoFifo();
             } catch (InterruptedException ex) {
                 Logger.getLogger(ProcessamentoUI.class.getName()).log(Level.SEVERE, null, ex);
@@ -56,11 +58,9 @@ public class ProcessamentoUI extends javax.swing.JInternalFrame {
             
             Processo proc = listRun.get(0);
             Processo procTemp = Temp.ReturnaProcessoPorPid(proc.getPid());
-            boolean Finalizar = TrocaEstado(procTemp, "Execucao");      
+            TrocaEstado(procTemp, "Execucao");      
             listRun.remove(0);
                       
-
-            System.out.println(proc.toString());
             if("CPU-Bound".equals(proc.getTipo()))
             {
                 Thread.sleep(700);
@@ -77,10 +77,9 @@ public class ProcessamentoUI extends javax.swing.JInternalFrame {
                 proc.setProcessado(false);
             }
             
-            Finalizar = TrocaEstado(proc, "Ponto");
+            TrocaEstado(proc, "Ponto");
             System.out.println(proc.toString());
-            
-            if(!Finalizar)
+            if(!proc.finaliza)
             {
                 listRun.add(proc);
             }
@@ -89,24 +88,24 @@ public class ProcessamentoUI extends javax.swing.JInternalFrame {
                 Temp.FinalizaProcesso(proc.getPid());
             }
             
-        } 
-    }
-    public boolean TrocaEstado(Processo proc, String estato)
-    {
 
-        if("Finalizar".equals(proc.getEstado()))
-        {
-            Temp.AtualizaEstado(proc.getPid(), estato);
-            return true;
-        }
-        else
-        {
-            Temp.AtualizaEstado(proc.getPid(), estato);
-           return false; 
         } 
-        
     }
     
+    public void TrocaEstado(Processo proc, String estado)
+    {
+        Temp.AtualizaEstado(proc.getPid(), estado);
+    }
+    
+    public void AtualizaListas()
+    {
+        if(Temp.list.size() > 0)
+        {
+            for (Processo p : Temp.list) {
+                AtualizaFinalizar(p.getPid(), p.finaliza);
+            }
+        }
+    }
 
     public void VerificaProcessoNovo()
     {
@@ -124,8 +123,49 @@ public class ProcessamentoUI extends javax.swing.JInternalFrame {
             }
         }
     }
+    public void AtualizaFinalizar(int pid, boolean finalizar)
+    {
+        Processo returnProc = ReturnaProcessoPorPid(pid);  
+        
+        int index = listRun.indexOf(returnProc);
+        returnProc.finaliza = finalizar;
+        
+        listRun.set(index, returnProc);
+    }
     
     
+    public Processo ReturnaProcessoPorPid(int pid)
+    {
+        Processo returnProc = null;
+        for (Processo proc : listRun) {
+            if(proc.getPid() == pid)
+            {
+                returnProc = proc;
+            }
+        }
+
+        if(returnProc == null)
+        {
+            throw new ArrayIndexOutOfBoundsException("Pid não encontado");
+        }
+        else
+        {
+            return returnProc;
+        }        
+    }     
+    
+    public void AtualizaPrioridade(int pid, int prioridade)
+    {
+        int index;
+        Processo returnProc = ReturnaProcessoPorPid(pid);  
+        
+        index = listRun.indexOf(returnProc);
+        returnProc.setPrioridade(prioridade);
+        
+        listRun.set(index, returnProc);
+    }
+        
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
