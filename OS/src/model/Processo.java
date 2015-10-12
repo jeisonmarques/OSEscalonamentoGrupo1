@@ -22,18 +22,37 @@ public class Processo {
     private int tempoProcessamento;
     private String estado;
     private boolean processado;
-    public boolean finaliza;
+    private boolean finaliza;
+    private boolean suspenso;
+    public int IOCount;
 
     public Processo() {
         
         Random gerador = new Random(); 
-        this.processado = false;
+        this.processado = true;
         this.tempoProcessamento = 0;
         this.estado = "N/A";
         this.pid = gerador.nextInt(999999);
         this.finaliza = false;
+        this.suspenso = false;
+    }
+    
+    public boolean getFinaliza() {
+        return finaliza;
     }
 
+    public void setFinaliza(boolean finaliza) {
+        this.finaliza = finaliza;
+    }
+
+    public boolean getSuspenso() {
+        return suspenso;
+    }
+
+    public void setSuspenso(boolean suspenso) {
+        this.suspenso = suspenso;
+    }
+    
     public String getTipo() {
         return tipo;
     }
@@ -98,13 +117,14 @@ public class Processo {
         this.processado = processado;
     }
 
+    
     @Override
     public String toString() {
         return "Processo{" + "tipo=" + tipo + ", pid=" + pid 
                 + ", prioridade=" + prioridade + ", hrEntrada=" + horaEntrada 
-                + ", hrSaida=" + horaSaida + ", tProc=" + tempoProcessamento 
+                + ",\n hrSaida=" + horaSaida + ", tProc=" + tempoProcessamento 
                 + ", estado=" + estado + ", proc=" + processado 
-                + ", finalizar="+finaliza+'}';
+                + ", finalizar="+finaliza+ ", suspenso+"+suspenso+'}';
     }
     
 }

@@ -20,7 +20,7 @@ public class Log {
     public static void AdicionarMenssagem(String messagem)
     {
         Date d = new Date();
-        String msg = d.toString() + " - " +messagem + "\n";
+        String msg = d.toString() + " - " +messagem+ "\n";
         
         LogMensagem msgObj = new LogMensagem(msg);
         

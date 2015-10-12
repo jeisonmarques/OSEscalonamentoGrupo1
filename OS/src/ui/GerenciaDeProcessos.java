@@ -186,7 +186,7 @@ public class GerenciaDeProcessos extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_jButtonCriarActionPerformed
 
     private void jButtonSuspenderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSuspenderActionPerformed
-        if(jTableProcesso.getSelectedRow() == -1){
+        if(jTableProcesso.getSelectedRow() != -1){
             Temp.AtualizaEstado(RetornaPidTabela(), "Suspender");
         }
     }//GEN-LAST:event_jButtonSuspenderActionPerformed
@@ -212,7 +212,6 @@ public class GerenciaDeProcessos extends javax.swing.JInternalFrame {
     private void jButtonFinalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFinalizarActionPerformed
         if(jTableProcesso.getSelectedRow() != -1){
             Temp.AtualizaEstado(RetornaPidTabela(), "Finalizar");
-            Log.AdicionarMenssagem("add");
             jTableProcesso.clearSelection();            
         }
     }//GEN-LAST:event_jButtonFinalizarActionPerformed

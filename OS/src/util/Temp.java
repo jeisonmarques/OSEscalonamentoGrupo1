@@ -1,6 +1,5 @@
 package util;
 
-
 import java.util.ArrayList;
 import model.Processo;
 
@@ -20,50 +19,54 @@ public class Temp {
     
     public static void AtualizaProcessado(int pid, boolean novo)
     {
-        int index = 0;
-       
         Processo returnProc = ReturnaProcessoPorPid(pid); 
-
-        index = list.indexOf(returnProc);
-        returnProc.setProcessado(novo);
-        
+        int index = list.indexOf(returnProc);
+        returnProc.setProcessado(novo);   
         list.set(index, returnProc);
     }
     
     public static void AtualizaEstado(int pid, String novoEstado)
     {
-        int index; 
         Processo returnProc = ReturnaProcessoPorPid(pid); 
-        index = list.indexOf(returnProc);
+        int index = list.indexOf(returnProc);
         returnProc.setEstado(novoEstado);  
-        
+        Log.AdicionarMenssagem("O processo: "+returnProc.getPid()+ " Trocou de status para: " +novoEstado);
         if(novoEstado.equals("Finalizar"))
         {
-            returnProc.finaliza = true;
+            returnProc.setFinaliza(true);
         }
-        list.set(index, returnProc);
-        
-
+        if(novoEstado.equals("Suspender"))
+        {
+            returnProc.setSuspenso(true);
+        }
+        if(novoEstado.equals("Prosseguir"))
+        {
+            returnProc.setSuspenso(false);
+        }
+        list.set(index, returnProc);        
     }  
     
     public static void AtualizaPrioridade(int pid, int prioridade)
     {
-        int index = 0;
-        Processo returnProc = ReturnaProcessoPorPid(pid);  
-        
-        index = list.indexOf(returnProc);
-        returnProc.setPrioridade(prioridade);
-        
+        Processo returnProc = ReturnaProcessoPorPid(pid);    
+        int index = list.indexOf(returnProc);
+        returnProc.setPrioridade(prioridade); 
+        list.set(index, returnProc);
+    }
+     
+    public static void AtualizaTempo(int pid, int tempo)
+    {
+        Processo returnProc = ReturnaProcessoPorPid(pid);    
+        int index = list.indexOf(returnProc);
+        int t = returnProc.getTempoProcessamento() + tempo;
+        returnProc.setTempoProcessamento(t);
         list.set(index, returnProc);
     }
     
     public static void FinalizaProcesso(int pid)
     {
-        int index;
-        Processo returnProc = ReturnaProcessoPorPid(pid);  
-        
-        index = list.indexOf(returnProc);
-        
+        Processo returnProc = ReturnaProcessoPorPid(pid);      
+        int index = list.indexOf(returnProc);   
         list.remove(index);
     }
     
@@ -86,5 +89,4 @@ public class Temp {
             return returnProc;
         }        
     }           
-
 }
