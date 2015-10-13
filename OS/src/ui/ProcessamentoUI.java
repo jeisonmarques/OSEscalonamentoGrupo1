@@ -1,12 +1,16 @@
 package ui;
 
 
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JRadioButton;
 import javax.swing.table.DefaultTableModel;
 import model.Processo;
 import util.Temp;
@@ -28,8 +32,8 @@ public class ProcessamentoUI extends javax.swing.JInternalFrame {
      * Creates new form ProcessamentoUI
      */
     private int tempoCpu = 300;
-    private Timer timerProc;
-    private Timer timerIO;
+    private final Timer timerProc;
+    private final Timer timerIO;
     private Date init;
     private Date end;
     public ArrayList<Processo> listRun = new ArrayList();
@@ -39,13 +43,15 @@ public class ProcessamentoUI extends javax.swing.JInternalFrame {
         initComponents();
         timerProc = new Timer();
         timerIO = new Timer();
-    
+        
      timerProc.scheduleAtFixedRate(new TimerTask() {
      public void run() {
             try {             
                 VerificaProcessoNovo();
                 AtualizaListas();
+                ProcessoPrioridade();
                 ProcessoFifo();
+
             } catch (InterruptedException ex) {
                 Logger.getLogger(ProcessamentoUI.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -74,7 +80,7 @@ public class ProcessamentoUI extends javax.swing.JInternalFrame {
         {
             Processo proc = listIO.get(0);
             jLabelProcIO.setText("ID: "+proc.getPid());
-            System.out.println("tamanho io: "+ listIO.size());
+            //System.out.println("tamanho io: "+ listIO.size());
             if("I/O-Bound(Disco)".equals(proc.getTipo()))
             {
                 jProgressBarIO.setMaximum(100);
@@ -86,7 +92,7 @@ public class ProcessamentoUI extends javax.swing.JInternalFrame {
                 }
                 else
                 {
-                    System.out.println(proc.getPid() +" - "+ proc.IOCount);
+                    //System.out.println(proc.getPid() +" - "+ proc.IOCount);
                     jProgressBarIO.setValue(proc.IOCount);
                     proc.IOCount++; 
                 }
@@ -102,7 +108,7 @@ public class ProcessamentoUI extends javax.swing.JInternalFrame {
                 }
                 else
                 {
-                    System.out.println(proc.getPid() +" - "+ proc.IOCount);
+                    //System.out.println(proc.getPid() +" - "+ proc.IOCount);
                     jProgressBarIO.setValue(proc.IOCount);
                     proc.IOCount++; 
                 }
@@ -110,7 +116,27 @@ public class ProcessamentoUI extends javax.swing.JInternalFrame {
 
         }   
     }
-            
+    
+    public void ProcessoPrioridade()
+    {        
+        if(listRun.size() > 0)
+        {
+            Collections.sort(listRun, new Comparator<Processo>() {
+            @Override
+            public int compare(Processo o1, Processo o2) {
+            return o2.getPrioridade() - o1.getPrioridade();
+
+            }
+            });
+
+            for (Processo proc : listRun) {
+                System.out.println(proc.toString());
+            }  
+        }    
+
+    }            
+    
+    
     public void ProcessoFifo() throws InterruptedException
     {
         if(listRun.size() > 0)
@@ -139,7 +165,7 @@ public class ProcessamentoUI extends javax.swing.JInternalFrame {
                     TrocaEstado(proc, "Ponto");
                 }
 
-                System.out.println(proc.toString());
+                //System.out.println(proc.toString());
                 if(!proc.getFinaliza())
                 {
                     listRun.add(proc);
@@ -204,6 +230,7 @@ public class ProcessamentoUI extends javax.swing.JInternalFrame {
             }
         }
     }
+    
     public void AtualizaFinalizar(int pid, boolean finalizar)
     {
         Processo returnProc = ReturnaProcessoPorPid(pid);       
@@ -247,6 +274,7 @@ public class ProcessamentoUI extends javax.swing.JInternalFrame {
         returnProc.setPrioridade(prioridade);  
         listRun.set(index, returnProc);
     }
+    
     public void AtualizaProcessamento(int pid, boolean processado)
     {
         Processo returnProc = ReturnaProcessoPorPid(pid);       
@@ -260,6 +288,7 @@ public class ProcessamentoUI extends javax.swing.JInternalFrame {
             model.removeRow(i);
         }
     }
+    
     public void Popula()
     {
         try{
@@ -283,7 +312,9 @@ public class ProcessamentoUI extends javax.swing.JInternalFrame {
         
         }
         catch(Exception e)
-        {}
+        {
+            ///sem tratamento
+        }
     }
 
     /**
@@ -295,22 +326,19 @@ public class ProcessamentoUI extends javax.swing.JInternalFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        buttonGroup1 = new javax.swing.ButtonGroup();
-        buttonGroup2 = new javax.swing.ButtonGroup();
-        buttonGroup3 = new javax.swing.ButtonGroup();
-        buttonGroup4 = new javax.swing.ButtonGroup();
-        buttonGroup5 = new javax.swing.ButtonGroup();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTableIO = new javax.swing.JTable();
         jProgressBarIO = new javax.swing.JProgressBar();
         jLabelProcIO = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTableProc = new javax.swing.JTable();
-        jComboBox1 = new javax.swing.JComboBox();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabelCountProc = new javax.swing.JLabel();
+        jRadioButtonFifo = new javax.swing.JRadioButton();
+        jRadioButtonPrioridade = new javax.swing.JRadioButton();
+        jLabel4 = new javax.swing.JLabel();
 
         jTableIO.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -350,8 +378,6 @@ public class ProcessamentoUI extends javax.swing.JInternalFrame {
         });
         jScrollPane2.setViewportView(jTableProc);
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
         jLabel1.setText("Ordem de I/O");
 
         jLabel2.setText("Ordem de Execução de Processos");
@@ -360,6 +386,22 @@ public class ProcessamentoUI extends javax.swing.JInternalFrame {
 
         jLabelCountProc.setText("...");
 
+        jRadioButtonFifo.setText("FIFO");
+        jRadioButtonFifo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButtonFifoActionPerformed(evt);
+            }
+        });
+
+        jRadioButtonPrioridade.setText("Prioridade");
+        jRadioButtonPrioridade.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jRadioButtonPrioridadeActionPerformed(evt);
+            }
+        });
+
+        jLabel4.setText("Algoritimo:");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -367,29 +409,33 @@ public class ProcessamentoUI extends javax.swing.JInternalFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(0, 0, Short.MAX_VALUE)
                                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 454, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel2)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel3)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(jLabelCountProc)))
+                                .addComponent(jLabel2)
                                 .addGap(0, 0, Short.MAX_VALUE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabelProcIO)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel1)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(72, 72, 72)
-                        .addComponent(jProgressBarIO, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabelCountProc)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jRadioButtonPrioridade)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jRadioButtonFifo)
+                                .addGap(30, 30, 30)))
+                        .addGap(117, 117, 117)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabelProcIO)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1)
+                    .addComponent(jProgressBarIO, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -408,34 +454,51 @@ public class ProcessamentoUI extends javax.swing.JInternalFrame {
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabelProcIO)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel3)
-                        .addComponent(jLabelCountProc)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jProgressBarIO, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(67, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabelProcIO)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel3)
+                                .addComponent(jLabelCountProc)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jProgressBarIO, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jRadioButtonFifo)
+                            .addComponent(jLabel4))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jRadioButtonPrioridade)))
+                .addContainerGap(70, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jRadioButtonFifoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonFifoActionPerformed
+        if(jRadioButtonPrioridade.isSelected())
+        {
+            jRadioButtonPrioridade.setSelected(false);
+        }
+    }//GEN-LAST:event_jRadioButtonFifoActionPerformed
+
+    private void jRadioButtonPrioridadeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonPrioridadeActionPerformed
+        if(jRadioButtonFifo.isSelected())
+        {
+            jRadioButtonFifo.setSelected(false);
+        }
+    }//GEN-LAST:event_jRadioButtonPrioridadeActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.ButtonGroup buttonGroup1;
-    private javax.swing.ButtonGroup buttonGroup2;
-    private javax.swing.ButtonGroup buttonGroup3;
-    private javax.swing.ButtonGroup buttonGroup4;
-    private javax.swing.ButtonGroup buttonGroup5;
-    private javax.swing.JComboBox jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabelCountProc;
     private javax.swing.JLabel jLabelProcIO;
     private javax.swing.JProgressBar jProgressBarIO;
+    private javax.swing.JRadioButton jRadioButtonFifo;
+    private javax.swing.JRadioButton jRadioButtonPrioridade;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTableIO;

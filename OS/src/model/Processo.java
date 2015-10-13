@@ -127,4 +127,12 @@ public class Processo {
                 + ", finalizar="+finaliza+ ", suspenso+"+suspenso+'}';
     }
     
+    public int compareTo(Processo compareProc) {
+        int comparePrioridade=((Processo)compareProc).getPrioridade();
+        /* For Ascending order*/
+        return this.prioridade - comparePrioridade;
+
+        /* For Descending order do like this */
+        //return compareage-this.studentage;
+    }
 }

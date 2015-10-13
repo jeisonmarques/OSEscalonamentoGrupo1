@@ -3,7 +3,7 @@ import ui.ProcessamentoUI;
 import ui.LogDeProcessos;
 import ui.GerenciaDeProcessos;
 import ui.AddProcessos;
-import util.Log;
+
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -24,9 +24,7 @@ public class Home extends javax.swing.JFrame {
     public Home() {
         initComponents();
         setLocationRelativeTo(null);
-        setSize(800, 600);
-
-       
+        setSize(800, 600);       
     }
 
     /**
