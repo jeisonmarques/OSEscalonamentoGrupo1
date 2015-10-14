@@ -1,7 +1,7 @@
 package ui;
 
 
-import util.Temp;
+import util.Manager;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -86,7 +86,7 @@ public class EditPrioridadeProcesso extends javax.swing.JInternalFrame {
     private void jButtonSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSalvarActionPerformed
        
         int prioConp = (int)jSpinnerPrioridade.getValue();
-        Temp.AtualizaPrioridade(pid, prioConp);     
+        Manager.AtualizaPrioridade(pid, prioConp);     
         this.setVisible(false);        
         
     }//GEN-LAST:event_jButtonSalvarActionPerformed

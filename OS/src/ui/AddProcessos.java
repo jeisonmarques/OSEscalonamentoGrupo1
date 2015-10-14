@@ -2,7 +2,7 @@ package ui;
 
 
 import model.Processo;
-import util.Temp;
+import util.Manager;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -99,7 +99,7 @@ public class AddProcessos extends javax.swing.JInternalFrame {
         proc.setPrioridade(Integer.parseInt(jSpinnerPrioridade.getValue().toString()));
         proc.setTipo(jCBTipoProcesso.getSelectedItem().toString());
         
-        Temp.list.add(proc);
+        Manager.list.add(proc);
         this.setVisible(false);
     }//GEN-LAST:event_jButtonCriarActionPerformed
 

@@ -1,7 +1,5 @@
 package ui;
 
-
-import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -10,10 +8,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JRadioButton;
 import javax.swing.table.DefaultTableModel;
 import model.Processo;
-import util.Temp;
+import util.Manager;
 
 
 /*
@@ -21,7 +18,6 @@ import util.Temp;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 /**
  *
  * @author jeison.marques
@@ -38,281 +34,239 @@ public class ProcessamentoUI extends javax.swing.JInternalFrame {
     private Date end;
     public ArrayList<Processo> listRun = new ArrayList();
     public ArrayList<Processo> listIO = new ArrayList();
-    
+
     public ProcessamentoUI() {
         initComponents();
         timerProc = new Timer();
         timerIO = new Timer();
-        
-     timerProc.scheduleAtFixedRate(new TimerTask() {
-     public void run() {
-            try {             
-                VerificaProcessoNovo();
-                AtualizaListas();
-                ProcessoPrioridade();
-                ProcessoFifo();
 
-            } catch (InterruptedException ex) {
-                Logger.getLogger(ProcessamentoUI.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            
-            Date d = new Date();
-            System.out.println("Processando as " + d.toString());
-            System.out.println("Lista de Processamento: "+listRun.size());
-            System.out.println("Lista de Processos: "+Temp.list.size());
+        timerProc.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                try {
+                    VerificaProcessoNovo();
+                    AtualizaListas();
+                    ProcessoPrioridade();
+                    ProcessoRR();
+
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(ProcessamentoUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+                Date d = new Date();
+                System.out.println("Processando as " + d.toString());
+                System.out.println("Lista de Processamento: " + listRun.size());
+                System.out.println("Lista de Processos: " + Manager.list.size());
             }
         }, 0, 1000);
-    
-    timerIO.scheduleAtFixedRate(new TimerTask() {
-     public void run() {
-         try {
-             ProcessaIO();
-             Popula();
-         } catch (InterruptedException ex) {
-             Logger.getLogger(ProcessamentoUI.class.getName()).log(Level.SEVERE, null, ex);
-         }
+
+        timerIO.scheduleAtFixedRate(new TimerTask() {
+            public void run() {
+                try {
+                    ProcessaIO();
+                    Popula();
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(ProcessamentoUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         }, 0, 100);
     }
-    public void ProcessaIO() throws InterruptedException
-    {
-        if(listIO.size() > 0)
-        {
+
+    public void ProcessaIO() throws InterruptedException {
+        if (listIO.size() > 0) {
             Processo proc = listIO.get(0);
-            jLabelProcIO.setText("ID: "+proc.getPid());
+            jLabelProcIO.setText("ID: " + proc.getPid());
             //System.out.println("tamanho io: "+ listIO.size());
-            if("I/O-Bound(Disco)".equals(proc.getTipo()))
-            {
+            if ("I/O-Bound(Disco)".equals(proc.getTipo())) {
                 jProgressBarIO.setMaximum(100);
-                if(proc.IOCount >= 100){
-                    listIO.remove(0);
-                    TrocaEstado(proc, "Ponto");
-                    AtualizaProcessamento(proc.getPid(), true);                 
-                    proc.IOCount = 0;
-                }
-                else
-                {
-                    //System.out.println(proc.getPid() +" - "+ proc.IOCount);
-                    jProgressBarIO.setValue(proc.IOCount);
-                    proc.IOCount++; 
-                }
-            }
-            if("I/O-Bound(Fita)".equals(proc.getTipo()))
-            {
-                jProgressBarIO.setMaximum(150);
-                if(proc.IOCount >= 150){
+                if (proc.IOCount >= 100) {
                     listIO.remove(0);
                     TrocaEstado(proc, "Ponto");
                     AtualizaProcessamento(proc.getPid(), true);
                     proc.IOCount = 0;
-                }
-                else
-                {
+                } else {
                     //System.out.println(proc.getPid() +" - "+ proc.IOCount);
                     jProgressBarIO.setValue(proc.IOCount);
-                    proc.IOCount++; 
+                    proc.IOCount++;
+                }
+            }
+            if ("I/O-Bound(Fita)".equals(proc.getTipo())) {
+                jProgressBarIO.setMaximum(150);
+                if (proc.IOCount >= 150) {
+                    listIO.remove(0);
+                    TrocaEstado(proc, "Ponto");
+                    AtualizaProcessamento(proc.getPid(), true);
+                    proc.IOCount = 0;
+                } else {
+                    //System.out.println(proc.getPid() +" - "+ proc.IOCount);
+                    jProgressBarIO.setValue(proc.IOCount);
+                    proc.IOCount++;
                 }
             }
 
-        }   
+        }
     }
-    
-    public void ProcessoPrioridade()
-    {        
-        if(listRun.size() > 0)
-        {
-            Collections.sort(listRun, new Comparator<Processo>() {
-            @Override
-            public int compare(Processo o1, Processo o2) {
-            return o2.getPrioridade() - o1.getPrioridade();
 
-            }
+    public void ProcessoPrioridade() {
+        if (listRun.size() > 0) {
+            Collections.sort(listRun, new Comparator<Processo>() {
+                @Override
+                public int compare(Processo o1, Processo o2) {
+                    return o2.getPrioridade() - o1.getPrioridade();
+
+                }
             });
 
             for (Processo proc : listRun) {
                 System.out.println(proc.toString());
-            }  
-        }    
+            }
+        }
 
-    }            
-    
-    
-    public void ProcessoFifo() throws InterruptedException
-    {
-        if(listRun.size() > 0)
-        {
+    }
+
+    public void ProcessoRR() throws InterruptedException {
+        if (listRun.size() > 0) {
             Processo proc = listRun.get(0);
             listRun.remove(0);
-            
-            if(!proc.getSuspenso() && proc.getProcessado()){
 
-                TrocaEstado(proc, "Execucao");      
-                
-                if("CPU-Bound".equals(proc.getTipo()))
-                {
+            if (!proc.getSuspenso() && proc.getProcessado()) {
+
+                TrocaEstado(proc, "Execucao");
+
+                if ("CPU-Bound".equals(proc.getTipo())) {
                     Thread.sleep(tempoCpu);
                     proc.setProcessado(true);
                 }
-                if(proc.getTipo().contains("I/O-Bound"))
-                {
+                if (proc.getTipo().contains("I/O-Bound")) {
                     Thread.sleep(3);
                     TrocaEstado(proc, "I/O");
                     proc.setProcessado(false);
                     listIO.add(proc);
-                }
-                else
-                {
+                } else {
                     TrocaEstado(proc, "Ponto");
                 }
 
                 //System.out.println(proc.toString());
-                if(!proc.getFinaliza())
-                {
+                if (!proc.getFinaliza()) {
                     listRun.add(proc);
+                } else {
+                    Manager.FinalizaProcesso(proc.getPid());
                 }
-                else
-                {
-                    Temp.FinalizaProcesso(proc.getPid());
-                }
-            }
-            else
-            {
+            } else {
                 listRun.add(proc);
             }
-        } 
+        }
     }
-    
-    public void TrocaEstado(Processo proc, String estado)
-    {
-        Temp.AtualizaEstado(proc.getPid(), estado);
-        if("Execucao".equals(estado))
-        {
+
+    public void TrocaEstado(Processo proc, String estado) {
+        Manager.AtualizaEstado(proc.getPid(), estado);
+        if ("Execucao".equals(estado)) {
             init = new Date();
         }
-        if("Ponto".equals(estado) && "CPU-Bound".equals(proc.getTipo()))
-        {
+        if ("Ponto".equals(estado) && "CPU-Bound".equals(proc.getTipo())) {
             end = new Date();
             long tempo = end.getTime() - init.getTime();
-            Temp.AtualizaTempo(proc.getPid(), ((int)tempo - tempoCpu));
+            Manager.AtualizaTempo(proc.getPid(), ((int) tempo - tempoCpu));
         }
-        if("I/O".equals(estado))
-        {
+        if ("I/O".equals(estado)) {
             end = new Date();
             long tempo = end.getTime() - init.getTime();
-            Temp.AtualizaTempo(proc.getPid(), ((int)tempo));
+            Manager.AtualizaTempo(proc.getPid(), ((int) tempo));
         }
     }
-    
-    public void AtualizaListas()
-    {
-        if(Temp.list.size() > 0)
-        {
-            for (Processo p : Temp.list) {
+
+    public void AtualizaListas() {
+        if (Manager.list.size() > 0) {
+            for (Processo p : Manager.list) {
                 AtualizaFinalizar(p.getPid(), p.getFinaliza());
                 AtualizaSuspenso(p.getPid(), p.getSuspenso());
             }
         }
     }
 
-    public void VerificaProcessoNovo()
-    {
-        if(Temp.list.size() != listRun.size() && Temp.list.size() > 0)
-        {
-            if(Temp.list.size() > listRun.size())
-            {
-                for (Processo proc : Temp.list) {
-                    if("N/A".equals(proc.getEstado()))
-                    {
+    public void VerificaProcessoNovo() {
+        if (Manager.list.size() != listRun.size() && Manager.list.size() > 0) {
+            if (Manager.list.size() > listRun.size()) {
+                for (Processo proc : Manager.list) {
+                    if ("N/A".equals(proc.getEstado())) {
                         listRun.add(proc);
-                        Temp.AtualizaEstado(proc.getPid(), "Ponto");
+                        Manager.AtualizaEstado(proc.getPid(), "Ponto");
                     }
                 }
             }
         }
     }
-    
-    public void AtualizaFinalizar(int pid, boolean finalizar)
-    {
-        Processo returnProc = ReturnaProcessoPorPid(pid);       
+
+    public void AtualizaFinalizar(int pid, boolean finalizar) {
+        Processo returnProc = ReturnaProcessoPorPid(pid);
         int index = listRun.indexOf(returnProc);
-        returnProc.setFinaliza(finalizar);       
+        returnProc.setFinaliza(finalizar);
         listRun.set(index, returnProc);
     }
-    
-    public void AtualizaSuspenso(int pid, boolean suspenso)
-    {
-        Processo returnProc = ReturnaProcessoPorPid(pid);       
+
+    public void AtualizaSuspenso(int pid, boolean suspenso) {
+        Processo returnProc = ReturnaProcessoPorPid(pid);
         int index = listRun.indexOf(returnProc);
         returnProc.setSuspenso(suspenso);
         listRun.set(index, returnProc);
     }
-    
-    public Processo ReturnaProcessoPorPid(int pid)
-    {
+
+    public Processo ReturnaProcessoPorPid(int pid) {
         Processo returnProc = null;
         for (Processo proc : listRun) {
-            if(proc.getPid() == pid)
-            {
+            if (proc.getPid() == pid) {
                 returnProc = proc;
             }
         }
 
-        if(returnProc == null)
-        {
+        if (returnProc == null) {
             throw new ArrayIndexOutOfBoundsException("Pid não encontado");
-        }
-        else
-        {
+        } else {
             return returnProc;
-        }        
-    }     
-    
-    public void AtualizaPrioridade(int pid, int prioridade)
-    {
-        Processo returnProc = ReturnaProcessoPorPid(pid);       
+        }
+    }
+
+    public void AtualizaPrioridade(int pid, int prioridade) {
+        Processo returnProc = ReturnaProcessoPorPid(pid);
         int index = listRun.indexOf(returnProc);
-        returnProc.setPrioridade(prioridade);  
+        returnProc.setPrioridade(prioridade);
         listRun.set(index, returnProc);
     }
-    
-    public void AtualizaProcessamento(int pid, boolean processado)
-    {
-        Processo returnProc = ReturnaProcessoPorPid(pid);       
+
+    public void AtualizaProcessamento(int pid, boolean processado) {
+        Processo returnProc = ReturnaProcessoPorPid(pid);
         int index = listRun.indexOf(returnProc);
         returnProc.setProcessado(processado);
         listRun.set(index, returnProc);
     }
-    
+
     public void deletaTodasLinhas(final DefaultTableModel model) {
-        for( int i = model.getRowCount() - 1; i >= 0; i-- ) {
+        for (int i = model.getRowCount() - 1; i >= 0; i--) {
             model.removeRow(i);
         }
     }
-    
-    public void Popula()
-    {
-        try{
-        jLabelCountProc.setText(""+Temp.list.size());
-        DefaultTableModel modeloIO = (DefaultTableModel) jTableIO.getModel();
-        deletaTodasLinhas(modeloIO);
-        synchronized(listIO){
-            for (Processo val : listIO) {
-                modeloIO.addRow(new String [] {""+val.getPid(),""+val.IOCount});
-            }
-        }
-        DefaultTableModel modeloProc = (DefaultTableModel) jTableProc.getModel();
-        deletaTodasLinhas(modeloProc);
-        synchronized(listRun){
-            if(listRun.size() > 0){
-                for (Processo val : listRun) {
-                    modeloProc.addRow(new String [] {""+val.getPid(),val.getTipo(), ""+val.getTempoProcessamento()});
+
+    public void Popula() {
+        try {
+            jLabelCountProc.setText("" + Manager.list.size());
+            DefaultTableModel modeloIO = (DefaultTableModel) jTableIO.getModel();
+            deletaTodasLinhas(modeloIO);
+            synchronized (listIO) {
+                for (Processo val : listIO) {
+                    modeloIO.addRow(new String[]{"" + val.getPid(), "" + val.IOCount});
                 }
             }
-        }
-        
-        }
-        catch(Exception e)
-        {
+            DefaultTableModel modeloProc = (DefaultTableModel) jTableProc.getModel();
+            deletaTodasLinhas(modeloProc);
+            synchronized (listRun) {
+                if (listRun.size() > 0) {
+                    for (Processo val : listRun) {
+                        modeloProc.addRow(new String[]{"" + val.getPid(), val.getTipo(), "" + val.getTempoProcessamento()});
+                    }
+                }
+            }
+
+        } catch (Exception e) {
             ///sem tratamento
         }
     }
@@ -336,8 +290,8 @@ public class ProcessamentoUI extends javax.swing.JInternalFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabelCountProc = new javax.swing.JLabel();
-        jRadioButtonFifo = new javax.swing.JRadioButton();
-        jRadioButtonPrioridade = new javax.swing.JRadioButton();
+        jTextFieldTempo = new javax.swing.JTextField();
+        jButtonSalvaTempo = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
 
         jTableIO.setModel(new javax.swing.table.DefaultTableModel(
@@ -386,21 +340,16 @@ public class ProcessamentoUI extends javax.swing.JInternalFrame {
 
         jLabelCountProc.setText("...");
 
-        jRadioButtonFifo.setText("FIFO");
-        jRadioButtonFifo.addActionListener(new java.awt.event.ActionListener() {
+        jTextFieldTempo.setText("300");
+
+        jButtonSalvaTempo.setText("Salvar");
+        jButtonSalvaTempo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jRadioButtonFifoActionPerformed(evt);
+                jButtonSalvaTempoActionPerformed(evt);
             }
         });
 
-        jRadioButtonPrioridade.setText("Prioridade");
-        jRadioButtonPrioridade.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jRadioButtonPrioridadeActionPerformed(evt);
-            }
-        });
-
-        jLabel4.setText("Algoritimo:");
+        jLabel4.setText("<html>Tempo de<br>procesamento:</html>");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -410,27 +359,23 @@ public class ProcessamentoUI extends javax.swing.JInternalFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 454, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel2)
-                                .addGap(0, 0, Short.MAX_VALUE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                        .addGap(0, 5, Short.MAX_VALUE)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 454, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabelCountProc)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jRadioButtonPrioridade)
+                            .addComponent(jLabel2)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jRadioButtonFifo)
-                                .addGap(30, 30, 30)))
-                        .addGap(117, 117, 117)))
+                                .addComponent(jLabel3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jLabelCountProc))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(27, 27, 27)
+                                .addComponent(jTextFieldTempo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButtonSalvaTempo)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabelProcIO)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 188, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -454,42 +399,41 @@ public class ProcessamentoUI extends javax.swing.JInternalFrame {
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 205, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabelProcIO)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jLabel3)
-                                .addComponent(jLabelCountProc)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jProgressBarIO, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jRadioButtonFifo)
-                            .addComponent(jLabel4))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jRadioButtonPrioridade)))
-                .addContainerGap(70, Short.MAX_VALUE))
+                    .addComponent(jLabelProcIO)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel3)
+                        .addComponent(jLabelCountProc)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jProgressBarIO, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jTextFieldTempo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jButtonSalvaTempo)))
+                .addContainerGap(68, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jRadioButtonFifoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonFifoActionPerformed
-        if(jRadioButtonPrioridade.isSelected())
-        {
-            jRadioButtonPrioridade.setSelected(false);
-        }
-    }//GEN-LAST:event_jRadioButtonFifoActionPerformed
+    private void jButtonSalvaTempoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSalvaTempoActionPerformed
+        this.tempoCpu = Integer.parseInt(jTextFieldTempo.getName());
+        
+        
+        if (jTextFieldTempo.getText().length() > 0)
+        {      
+          try {
+               String testText = jTextFieldTempo.getText();
+               this.tempoCpu = Integer.parseInt(testText);
+          } catch (NumberFormatException ex) {
 
-    private void jRadioButtonPrioridadeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButtonPrioridadeActionPerformed
-        if(jRadioButtonFifo.isSelected())
-        {
-            jRadioButtonFifo.setSelected(false);
+          }
         }
-    }//GEN-LAST:event_jRadioButtonPrioridadeActionPerformed
+    }//GEN-LAST:event_jButtonSalvaTempoActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButtonSalvaTempo;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -497,11 +441,10 @@ public class ProcessamentoUI extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabelCountProc;
     private javax.swing.JLabel jLabelProcIO;
     private javax.swing.JProgressBar jProgressBarIO;
-    private javax.swing.JRadioButton jRadioButtonFifo;
-    private javax.swing.JRadioButton jRadioButtonPrioridade;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTableIO;
     private javax.swing.JTable jTableProc;
+    private javax.swing.JTextField jTextFieldTempo;
     // End of variables declaration//GEN-END:variables
 }

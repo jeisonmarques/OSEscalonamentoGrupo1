@@ -13,7 +13,7 @@ import model.Processo;
  *
  * @author jeisonmarques
  */
-public class Temp {
+public class Manager {
     
     public static ArrayList<Processo> list = new ArrayList<>();
     

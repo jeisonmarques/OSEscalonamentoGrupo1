@@ -1,7 +1,7 @@
 package ui;
 
 
-import util.Temp;
+import util.Manager;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.JDesktopPane;
@@ -62,7 +62,7 @@ public class GerenciaDeProcessos extends javax.swing.JInternalFrame {
     {
         DefaultTableModel modelo = (DefaultTableModel) jTableProcesso.getModel();
         deletaTodasLinhas(modelo);
-        for (Processo val : Temp.list) {
+        for (Processo val : Manager.list) {
             modelo.addRow(new String [] {""+val.getPid(),val.getEstado(), val.getTipo(), ""+val.getTempoProcessamento(), ""+val.getPrioridade()});
         }
     }
@@ -187,7 +187,7 @@ public class GerenciaDeProcessos extends javax.swing.JInternalFrame {
 
     private void jButtonSuspenderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSuspenderActionPerformed
         if(jTableProcesso.getSelectedRow() != -1){
-            Temp.AtualizaEstado(RetornaPidTabela(), "Suspender");
+            Manager.AtualizaEstado(RetornaPidTabela(), "Suspender");
         }
     }//GEN-LAST:event_jButtonSuspenderActionPerformed
 
@@ -205,13 +205,13 @@ public class GerenciaDeProcessos extends javax.swing.JInternalFrame {
 
     private void jButtonProsseguirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonProsseguirActionPerformed
         if(jTableProcesso.getSelectedRow() != -1){
-            Temp.AtualizaEstado(RetornaPidTabela(), "Prosseguir");
+            Manager.AtualizaEstado(RetornaPidTabela(), "Prosseguir");
         }
     }//GEN-LAST:event_jButtonProsseguirActionPerformed
 
     private void jButtonFinalizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonFinalizarActionPerformed
         if(jTableProcesso.getSelectedRow() != -1){
-            Temp.AtualizaEstado(RetornaPidTabela(), "Finalizar");
+            Manager.AtualizaEstado(RetornaPidTabela(), "Finalizar");
             jTableProcesso.clearSelection();            
         }
     }//GEN-LAST:event_jButtonFinalizarActionPerformed
