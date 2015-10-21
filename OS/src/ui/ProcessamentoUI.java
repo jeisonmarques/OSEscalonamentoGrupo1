@@ -61,6 +61,7 @@ public class ProcessamentoUI extends javax.swing.JInternalFrame {
         }, 0, 1000);
 
         timerIO.scheduleAtFixedRate(new TimerTask() {
+            @Override
             public void run() {
                 try {
                     ProcessaIO();
@@ -293,6 +294,9 @@ public class ProcessamentoUI extends javax.swing.JInternalFrame {
         jTextFieldTempo = new javax.swing.JTextField();
         jButtonSalvaTempo = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+
+        setClosable(true);
 
         jTableIO.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -351,6 +355,8 @@ public class ProcessamentoUI extends javax.swing.JInternalFrame {
 
         jLabel4.setText("<html>Tempo de<br>procesamento:</html>");
 
+        jLabel5.setText("ms");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -372,6 +378,8 @@ public class ProcessamentoUI extends javax.swing.JInternalFrame {
                                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(27, 27, 27)
                                 .addComponent(jTextFieldTempo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jLabel5)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jButtonSalvaTempo)))
                         .addGap(0, 0, Short.MAX_VALUE)))
@@ -409,7 +417,8 @@ public class ProcessamentoUI extends javax.swing.JInternalFrame {
                     .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jTextFieldTempo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jButtonSalvaTempo)))
+                        .addComponent(jButtonSalvaTempo)
+                        .addComponent(jLabel5)))
                 .addContainerGap(68, Short.MAX_VALUE))
         );
 
@@ -417,8 +426,7 @@ public class ProcessamentoUI extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonSalvaTempoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSalvaTempoActionPerformed
-        this.tempoCpu = Integer.parseInt(jTextFieldTempo.getName());
-        
+        this.tempoCpu = Integer.parseInt(jTextFieldTempo.getName());        
         
         if (jTextFieldTempo.getText().length() > 0)
         {      
@@ -438,6 +446,7 @@ public class ProcessamentoUI extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabelCountProc;
     private javax.swing.JLabel jLabelProcIO;
     private javax.swing.JProgressBar jProgressBarIO;

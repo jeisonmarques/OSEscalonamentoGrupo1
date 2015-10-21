@@ -19,12 +19,9 @@ public class AddProcessos extends javax.swing.JInternalFrame {
     /**
      * Creates new form ViewProcessos
      */
-    private Processo proc;
     
     public AddProcessos() {
-    initComponents();
-    
-    proc = new Processo();   
+        initComponents();
 
     }
 
@@ -42,6 +39,8 @@ public class AddProcessos extends javax.swing.JInternalFrame {
         jSpinnerPrioridade = new javax.swing.JSpinner();
         jLabel1 = new javax.swing.JLabel();
         jButtonCriar = new javax.swing.JButton();
+
+        setClosable(true);
 
         jCBTipoProcesso.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "CPU-Bound", "I/O-Bound(Disco)", "I/O-Bound(Fita)" }));
 
@@ -96,6 +95,7 @@ public class AddProcessos extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonCriarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCriarActionPerformed
+        Processo proc = new Processo();       
         proc.setPrioridade(Integer.parseInt(jSpinnerPrioridade.getValue().toString()));
         proc.setTipo(jCBTipoProcesso.getSelectedItem().toString());
         

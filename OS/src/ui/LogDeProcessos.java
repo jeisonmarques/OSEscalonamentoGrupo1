@@ -32,6 +32,7 @@ public class LogDeProcessos extends javax.swing.JInternalFrame {
         Timer timer = new Timer();
     
         timer.scheduleAtFixedRate(new TimerTask() {
+        @Override
         public void run() {               
             
             for (LogMensagem msg : Log.list) {

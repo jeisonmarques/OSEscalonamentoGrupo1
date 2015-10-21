@@ -18,8 +18,8 @@ public class EditPrioridadeProcesso extends javax.swing.JInternalFrame {
     /**
      * Creates new form EditPrioridadeProcesso
      */
-    int pid;
-    int prioridade;
+    protected int pid;
+    protected int prioridade;
     
     public EditPrioridadeProcesso(int pid, int prioridade) {
         initComponents();
@@ -40,6 +40,8 @@ public class EditPrioridadeProcesso extends javax.swing.JInternalFrame {
         jButtonSalvar = new javax.swing.JButton();
         jSpinnerPrioridade = new javax.swing.JSpinner();
         jLabel1 = new javax.swing.JLabel();
+
+        setClosable(true);
 
         jButtonSalvar.setText("Salvar");
         jButtonSalvar.addActionListener(new java.awt.event.ActionListener() {
@@ -84,11 +86,10 @@ public class EditPrioridadeProcesso extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSalvarActionPerformed
-       
+
         int prioConp = (int)jSpinnerPrioridade.getValue();
         Manager.AtualizaPrioridade(pid, prioConp);     
-        this.setVisible(false);        
-        
+        this.setVisible(false);            
     }//GEN-LAST:event_jButtonSalvarActionPerformed
 
 

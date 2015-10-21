@@ -1,13 +1,11 @@
 package ui;
 
-
 import util.Manager;
 import java.util.Timer;
 import java.util.TimerTask;
 import javax.swing.JDesktopPane;
 import javax.swing.table.DefaultTableModel;
 import model.Processo;
-import util.Log;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -30,6 +28,7 @@ public class GerenciaDeProcessos extends javax.swing.JInternalFrame {
          Timer timer = new Timer();
     
      timer.scheduleAtFixedRate(new TimerTask() {
+     @Override
      public void run() {
 
             int index = jTableProcesso.getSelectedRow();
@@ -83,6 +82,8 @@ public class GerenciaDeProcessos extends javax.swing.JInternalFrame {
         jButtonCriar = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTableProcesso = new javax.swing.JTable();
+
+        setClosable(true);
 
         jButtonSuspender.setText("Suspender");
         jButtonSuspender.addActionListener(new java.awt.event.ActionListener() {

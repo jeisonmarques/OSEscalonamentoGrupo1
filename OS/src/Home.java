@@ -23,8 +23,8 @@ public class Home extends javax.swing.JFrame {
     public AddProcessos view;
     public Home() {
         initComponents();
+        setSize(800, 600);  
         setLocationRelativeTo(null);
-        setSize(800, 600);       
     }
 
     /**
@@ -46,8 +46,9 @@ public class Home extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jDesktop.setPreferredSize(new java.awt.Dimension(1000, 1000));
+        jDesktop.setLayout(null);
 
-        jMenuTeste.setText("File");
+        jMenuTeste.setText("Arquivo");
 
         jMenuItemGerenciaDeProcesso.setText("Gerencia de Processos");
         jMenuItemGerenciaDeProcesso.addActionListener(new java.awt.event.ActionListener() {
